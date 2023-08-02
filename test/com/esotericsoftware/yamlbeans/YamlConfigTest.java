@@ -37,6 +37,7 @@ public class YamlConfigTest {
 
 	@Test
 	public void testSetClassTag() throws YamlException {
+		yamlConfig = new UnsafeYamlConfig();
 		yamlConfig.setClassTag("String", String.class);
 		yamlConfig.setClassTag("!Int", Integer.class);
 		String yaml = "!String test\n---\n!Int 1";
@@ -59,6 +60,7 @@ public class YamlConfigTest {
 
 	@Test
 	public void testSetScalarSerializer() throws YamlException {
+		yamlConfig = new UnsafeYamlConfig();
 		TimeZone timeZone = TimeZone.getTimeZone("GMT+0");
 		TimeZone.setDefault(timeZone);
 
@@ -233,7 +235,7 @@ public class YamlConfigTest {
 	public void testSetWriteRootTags() throws YamlException {
 		TestObject to = new TestObject();
 		to.a = "test";
-
+		yamlConfig = new UnsafeYamlConfig();
 		StringWriter stringWriter = new StringWriter();
 		YamlWriter yamlWriter = new YamlWriter(stringWriter, yamlConfig);
 		yamlWriter.write(to);
@@ -252,6 +254,7 @@ public class YamlConfigTest {
 	@Test
 	public void testSetWriteRootElementTags() throws YamlException {
 		TestObject to1 = new TestObject();
+		yamlConfig = new UnsafeYamlConfig();
 		to1.a = "test";
 		List<TestObject> list = new ArrayList<TestObject>();
 		list.add(to1);
@@ -295,14 +298,13 @@ public class YamlConfigTest {
 		yamlWriter.write(testObject);
 		yamlWriter.close();
 
-		assertEquals(TESTOBJECT_TAG + " {}" + LINE_SEPARATOR, stringWriter.toString());
+		assertEquals( "{}" + LINE_SEPARATOR, stringWriter.toString());
 
 		yamlConfig.writeConfig.setWriteDefaultValues(true);
 		yamlWriter = new YamlWriter(stringWriter, yamlConfig);
 		yamlWriter.write(testObject);
 		yamlWriter.close();
-		assertFalse((TESTOBJECT_TAG + " {}" + LINE_SEPARATOR).equals(stringWriter.toString()));
-		assertTrue(stringWriter.toString().contains(TESTOBJECT_TAG + LINE_SEPARATOR));
+		assertFalse(("{}" + LINE_SEPARATOR).equals(stringWriter.toString()));
 		assertTrue(stringWriter.toString().contains("a: " + LINE_SEPARATOR));
 
 		assertTrue(stringWriter.toString().contains("object: " + LINE_SEPARATOR));
@@ -318,7 +320,7 @@ public class YamlConfigTest {
 		yamlWriter.write(testObject);
 		yamlWriter.close();
 
-		assertEquals(TESTOBJECT_TAG + LINE_SEPARATOR + "name: Jack" + LINE_SEPARATOR + "age: 18" + LINE_SEPARATOR,
+		assertEquals( "name: Jack" + LINE_SEPARATOR + "age: 18" + LINE_SEPARATOR,
 				stringWriter.toString());
 
 		yamlConfig.writeConfig.setKeepBeanPropertyOrder(true);
@@ -326,7 +328,7 @@ public class YamlConfigTest {
 		yamlWriter = new YamlWriter(stringWriter, yamlConfig);
 		yamlWriter.write(testObject);
 		yamlWriter.close();
-		assertEquals(TESTOBJECT_TAG + LINE_SEPARATOR + "age: 18" + LINE_SEPARATOR + "name: Jack" + LINE_SEPARATOR,
+		assertEquals( "age: 18" + LINE_SEPARATOR + "name: Jack" + LINE_SEPARATOR,
 				stringWriter.toString());
 	}
 
@@ -377,7 +379,7 @@ public class YamlConfigTest {
 		YamlWriter yamlWriter = new YamlWriter(stringWriter, yamlConfig);
 		yamlWriter.write("test");
 		yamlWriter.close();
-		assertEquals("--- " + LINE_SEPARATOR + "!java.lang.String \"test\"" + LINE_SEPARATOR, stringWriter.toString());
+		assertEquals("--- " + LINE_SEPARATOR + "\"test\"" + LINE_SEPARATOR, stringWriter.toString());
 
 		List<String> list = new ArrayList<String>();
 		list.add("111");
@@ -387,8 +389,8 @@ public class YamlConfigTest {
 		yamlWriter.write(list);
 		yamlWriter.close();
 		assertEquals("--- " + LINE_SEPARATOR + "[" + LINE_SEPARATOR + multipleSpaces(indentSize)
-				+ "!java.lang.String \"111\"," + LINE_SEPARATOR + multipleSpaces(indentSize)
-				+ "!java.lang.String \"222\"" + LINE_SEPARATOR + "]" + LINE_SEPARATOR, stringWriter.toString());
+				+ "\"111\"," + LINE_SEPARATOR + multipleSpaces(indentSize)
+				+ "\"222\"" + LINE_SEPARATOR + "]" + LINE_SEPARATOR, stringWriter.toString());
 
 		Map<String, String> map = new HashMap<String, String>();
 		map.put("key", "value");
@@ -398,8 +400,8 @@ public class YamlConfigTest {
 		yamlWriter.close();
 		assertEquals(
 				"--- " + LINE_SEPARATOR + "{" + LINE_SEPARATOR + multipleSpaces(indentSize)
-						+ "? !java.lang.String \"key\"" + LINE_SEPARATOR + multipleSpaces(indentSize)
-						+ ": !java.lang.String \"value\"" + LINE_SEPARATOR + "}" + LINE_SEPARATOR,
+						+ "? \"key\"" + LINE_SEPARATOR + multipleSpaces(indentSize)
+						+ ": \"value\"" + LINE_SEPARATOR + "}" + LINE_SEPARATOR,
 				stringWriter.toString());
 	}
 
@@ -416,7 +418,7 @@ public class YamlConfigTest {
 		yamlWriter.write(list);
 		yamlWriter.close();
 		assertEquals("--- " + LINE_SEPARATOR + "[" + LINE_SEPARATOR + multipleSpaces(indentSize)
-				+ "!java.lang.Integer \"1\"" + LINE_SEPARATOR + "]" + LINE_SEPARATOR, stringWriter.toString());
+				+ "\"1\"" + LINE_SEPARATOR + "]" + LINE_SEPARATOR, stringWriter.toString());
 
 		try {
 			yamlConfig.writeConfig.setIndentSize(1);
@@ -454,6 +456,7 @@ public class YamlConfigTest {
 	public void testSetUseVerbatimTags() throws YamlException {
 		List<Integer> list = new LinkedList<Integer>();
 		list.add(1);
+		yamlConfig = new UnsafeYamlConfig();
 		StringWriter stringWriter = new StringWriter();
 		YamlWriter yamlWriter = new YamlWriter(stringWriter, yamlConfig);
 		yamlWriter.write(list);

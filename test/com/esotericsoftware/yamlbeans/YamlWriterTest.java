@@ -22,6 +22,7 @@ import java.beans.ConstructorProperties;
 import java.io.File;
 import java.io.StringWriter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -38,7 +39,7 @@ public class YamlWriterTest extends TestCase {
 
 	public void testPrivateFields () throws Exception {
 		YamlWriter yamlWriter = new com.esotericsoftware.yamlbeans.YamlWriter(new java.io.OutputStreamWriter(System.out));
-		
+
 		ArrayList list = new ArrayList();
 		list.add("abc");
 		list.add("123");
@@ -125,10 +126,10 @@ public class YamlWriterTest extends TestCase {
 	public void testStringEscaping () throws Exception {
 		Test test = new Test();
 		test.stringValue = "" + //
-			"if (chr != ' ' && chr != '\\t' && chr != '\\r'\n" + //
-			"\t&& chr != '\\n') {\n" + //
-			"\tbreak\n" + //
-			"\t}\n";
+				"if (chr != ' ' && chr != '\\t' && chr != '\\r'\n" + //
+				"\t&& chr != '\\n') {\n" + //
+				"\tbreak\n" + //
+				"\t}\n";
 		roundTrip(test);
 	}
 
@@ -149,8 +150,7 @@ public class YamlWriterTest extends TestCase {
 		test.value = Value.c;
 		test.date = new Date();
 
-		YamlConfig config = new YamlConfig();
-		config.writeConfig.setAutoAnchor(true);
+		YamlConfig config = new UnsafeYamlConfig();
 		Test result = roundTrip(test, Test.class, config);
 		assertEquals(test.stringValue, result.stringValue);
 		assertEquals(test.intValue, result.intValue);
@@ -203,10 +203,10 @@ public class YamlWriterTest extends TestCase {
 	public void testSingleQuotes () throws Exception {
 		Test test = new Test();
 		test.stringValue = "" + //
-			"if (chr != ' ' && chr != 't' && chr != 'r'\n" + //
-			"\t&& chr != 'n') {\n" + //
-			"\tbreak\n" + //
-			"\t}\n";
+				"if (chr != ' ' && chr != 't' && chr != 'r'\n" + //
+				"\t&& chr != 'n') {\n" + //
+				"\tbreak\n" + //
+				"\t}\n";
 		roundTrip(test);
 	}
 
@@ -250,7 +250,7 @@ public class YamlWriterTest extends TestCase {
 	public void testObjectField () throws Exception {
 		ValueHolder object = new ValueHolder();
 		object.value = "XYZ";
-		ValueHolder roundTrip = (ValueHolder)roundTrip(object);
+		ValueHolder roundTrip = (ValueHolder)roundTrip(object, new UnsafeYamlConfig());
 		assertEquals("XYZ", roundTrip.value);
 	}
 
@@ -260,7 +260,7 @@ public class YamlWriterTest extends TestCase {
 		list.add(new PhoneNumber("206-555-4321"));
 		list.add(new PhoneNumber("206-555-6789"));
 		list.add(new PhoneNumber("206-555-9876"));
-		List roundTrip = roundTrip(list, ArrayList.class, new YamlConfig());
+		List roundTrip = roundTrip(list, ArrayList.class, new UnsafeYamlConfig());
 		assertEquals("206-555-1234", ((PhoneNumber)roundTrip.get(0)).number);
 		assertEquals("206-555-4321", ((PhoneNumber)roundTrip.get(1)).number);
 		assertEquals("206-555-6789", ((PhoneNumber)roundTrip.get(2)).number);
@@ -269,7 +269,7 @@ public class YamlWriterTest extends TestCase {
 		Contact contact = new Contact();
 		contact.name = "Bill";
 		contact.phoneNumbers = list;
-		roundTrip = roundTrip(contact, Contact.class, new YamlConfig()).phoneNumbers;
+		roundTrip = roundTrip(contact, Contact.class, new UnsafeYamlConfig()).phoneNumbers;
 		assertEquals("206-555-1234", ((PhoneNumber)roundTrip.get(0)).number);
 		assertEquals("206-555-4321", ((PhoneNumber)roundTrip.get(1)).number);
 		assertEquals("206-555-6789", ((PhoneNumber)roundTrip.get(2)).number);
@@ -278,16 +278,29 @@ public class YamlWriterTest extends TestCase {
 
 	public void testConstructorProperties () throws Exception {
 		ConstructorPropertiesSample object = new ConstructorPropertiesSample(1, 2, 3);
-		ConstructorPropertiesSample roundTrip = (ConstructorPropertiesSample)roundTrip(object);
+		ConstructorPropertiesSample roundTrip = (ConstructorPropertiesSample)roundTrip(object, new UnsafeYamlConfig());
 		assertEquals(1, roundTrip.getX());
 		assertEquals(2, roundTrip.getY());
 		assertEquals(3, roundTrip.getZ());
 	}
 
+	public void testFliber() throws Exception {
+		List<PhoneNumber> blab = Arrays.asList(new PhoneNumber("321"),new PhoneNumber("1234"));
+		PhoneNumber number = new PhoneNumber("123",blab);
+		StringWriter buffer = new StringWriter();
+		YamlConfig yamlConfig = new YamlConfig();
+		yamlConfig.writeConfig.setWriteClassname(YamlConfig.WriteClassName.NEVER);
+		YamlWriter writer = new YamlWriter(buffer,yamlConfig);
+		writer.write(number);
+		String data = buffer.getBuffer().toString();
+		YamlReader reader = new YamlReader(data);
+		reader.read(PhoneNumber.class);
+	}
+
 	public void testConstructorPropertiesMixed () throws Exception {
 		ConstructorPropertiesSampleMixed object = new ConstructorPropertiesSampleMixed(1, 2);
 		object.setZ(3);
-		ConstructorPropertiesSampleMixed roundTrip = (ConstructorPropertiesSampleMixed)roundTrip(object);
+		ConstructorPropertiesSampleMixed roundTrip = (ConstructorPropertiesSampleMixed)roundTrip(object,new UnsafeYamlConfig());
 		assertEquals(1, roundTrip.getX());
 		assertEquals(2, roundTrip.getY());
 		assertEquals(3, roundTrip.getZ());
@@ -313,12 +326,13 @@ public class YamlWriterTest extends TestCase {
 	public void testSetAlias() throws YamlException {
 		Map<String, Test> map = new LinkedHashMap<String, Test>();
 		Test test = new Test();
+
 		test.stringValue = "test";
 		map.put("key1", test);
 		map.put("key2", test);
 
 		StringWriter sw = new StringWriter();
-		YamlWriter yamlWriter = new YamlWriter(sw);
+		YamlWriter yamlWriter = new YamlWriter(sw, new UnsafeYamlConfig());
 		yamlWriter.setAlias(test, "t");
 		yamlWriter.write(map);
 		yamlWriter.close();
@@ -331,9 +345,12 @@ public class YamlWriterTest extends TestCase {
 		return roundTrip(object, null, new YamlConfig());
 	}
 
+	private Object roundTrip (Object object, YamlConfig yamlConfig) throws Exception {
+		return roundTrip(object, null, yamlConfig);
+	}
+
 	private <T> T roundTrip (Object object, Class<T> type, YamlConfig config) throws Exception {
 		StringWriter buffer = new StringWriter();
-
 		YamlWriter writer = new YamlWriter(buffer, config);
 		writer.write(object);
 		writer.close();
@@ -405,6 +422,7 @@ public class YamlWriterTest extends TestCase {
 
 	static public class PhoneNumber {
 		public String number;
+		public List<PhoneNumber> numbys;
 
 		public PhoneNumber () {
 		}
@@ -412,6 +430,12 @@ public class YamlWriterTest extends TestCase {
 		public PhoneNumber (String number) {
 			this.number = number;
 		}
+
+		public PhoneNumber (String number,List<PhoneNumber> numbys) {
+			this.number = number;
+			this.numbys = numbys;
+		}
+
 	}
 
 	static public class ConstructorPropertiesSample {

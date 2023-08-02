@@ -1,4 +1,51 @@
-## YamlBeans
+# YamlBeans
+
+## Contrast Security Fork
+This fork was created to make and push the fixes for CVE-2023-24620 and CVE-2023-24621 to maven as the maintainer of com.esoteric:yamlbeans no longer has the ability to push to maven.
+More details of the vulnerabilities can be found at [SECURITY.md](SECURITY.md)
+### Upgrading from com.esoteric:yamlbeans to com.contrast:yamlbeans
+It "should" be easy to upgrade to the fixed version of yamlbeans. The API has not changed, and so for most user's updating the yamlbeans dependency should be enough. 
+However the fix for the two CVEs has changed the underlying logic of the library slightly. 
+
+#### Class Tags
+If you are ingesting YAML that utilises class tag e.g
+```yaml
+!com.example.data.SomeClass
+var1: "some data"
+var2: "some more data"
+``` 
+YAMLBeans will no longer read this, this is due to the fix for CVE-2023-24621 which disables this functionality by default.
+This type of user controlled polymorphic deserialization is inherently unsafe and is strongly discouraged.
+A safe alternative is to specify in the code which class YamlBeans should deserialize to e.g
+
+```java
+YamlReader reader = new YamlReader(new StringReader(yamlFile));
+SomeClass data = reader.read(SomeClass.class);
+```
+If it is not possible in your use case, it is possible to re-enable the unsafe polymorphic deserialization by doing the following. 
+```java
+YamlReader reader = new YamlReader(new StringReader(yamlFile), new UnsafeYamlConfig());
+SomeClass data = (SomeClass) reader.read();
+```
+Or to write them
+```java
+YamlWriter writer = new YamlWriter(yamlFile, new UnsafeYamlConfig());
+```
+This should only be done if it is not possible to use the above example where the code specifies the class to be deserialized to and 
+only then when the YAML document being read is from a trusted source.
+
+#### Anchors
+Anchors are by default disabled, this fixes the Denial of Service Vulnerability CVE-2023-24620.
+If they are required and the YAML document is from a trusted source, it is possible to re-enable them using
+```java
+YamlReader reader = new YamlReader(new StringReader(yamlFile), new UnsafeYamlConfig());
+```
+Or to write them
+```java
+YamlWriter writer = new YamlWriter(yamlFile, new UnsafeYamlConfig());
+```
+
+
 
 ![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.esotericsoftware.yamlbeans/yamlbeans/badge.svg)
 
