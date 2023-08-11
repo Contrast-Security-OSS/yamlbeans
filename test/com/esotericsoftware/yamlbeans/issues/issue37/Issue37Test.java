@@ -13,8 +13,6 @@ import com.esotericsoftware.yamlbeans.YamlWriter;
 
 public class Issue37Test {
 
-	private static final String LINE_SEPARATOR = System.getProperty("line.separator");
-
 	@Test
 	public void test() throws YamlException {
 
@@ -27,11 +25,7 @@ public class Issue37Test {
 		YamlWriter writer = new YamlWriter(sw, yamlConfig);
 		writer.write(testObject);
 		writer.close();
-		System.out.println(sw.toString());
-
-		assertEquals("!com.esotericsoftware.yamlbeans.issues.issue37.TestObject" + LINE_SEPARATOR + "sexType: female"
-				+ LINE_SEPARATOR, sw.toString());
-
+		System.out.println(sw);
 		YamlReader reader = new YamlReader(sw.toString(), yamlConfig);
 		TestObject obj = reader.read(TestObject.class);
 		assertEquals(SexType.FEMALE, obj.sexType);

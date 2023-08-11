@@ -10,12 +10,12 @@
 	</parent>
 
 	<name>YamlBeans</name>
-	<groupId>com.esotericsoftware.yamlbeans</groupId>
+	<groupId>com.contrast.yamlbeans</groupId>
 	<artifactId>yamlbeans</artifactId>
-	<version>1.16-SNAPSHOT</version>
+	<version>1.17-SNAPSHOT</version>
 
 	<description>Java object graphs, to and from YAML</description>
-	<url>https://github.com/EsotericSoftware/yamlbeans</url>
+	<url>https://github.com/Contrast-Security-OSS/yamlbeans</url>
 
 	<licenses>
 		<license>
@@ -25,9 +25,9 @@
 		</license>
 	</licenses>
 	<scm>
-		<url>scm:git:git@github.com:esotericsoftware/yamlbeans.git</url>
-		<connection>scm:git:git@github.com:esotericsoftware/yamlbeans.git</connection>
-		<developerConnection>scm:git:git@github.com:esotericsoftware/yamlbeans.git</developerConnection>
+		<url>git@github.com:Contrast-Security-OSS/yamlbeans.git</url>
+		<connection>git@github.com:Contrast-Security-OSS/yamlbeans.git</connection>
+		<developerConnection>git@github.com:Contrast-Security-OSS/yamlbeans.git</developerConnection>
 		<tag>HEAD</tag>
 	</scm>
 
@@ -36,7 +36,7 @@
 			<scope>test</scope>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
-			<version>4.8.2</version>
+			<version>4.13.2</version>
 		</dependency>
 	</dependencies>
 
@@ -120,20 +120,19 @@
 				<role>author</role>
 			</roles>
 		</developer>
+		<developer>
+			<id>JoeBeeContrast</id>
+			<name>Joseph Beeton</name>
+			<email>joseph.beeton@</email>
+			<organization>Contrast Security</organization>
+			<organizationUrl>https://contrastsecurity.com</organizationUrl>
+			<roles>
+				<role>developer</role>
+			</roles>
+		</developer>
 	</developers>
 
-	<contributors>
-		<contributor>
-			<name>Tony Chemit</name>
-			<email>dev@tchemit.fr</email>
-			<organization>Ultreia</organization>
-			<organizationUrl>http://ultreia.io</organizationUrl>
-			<timezone>Europe/Paris</timezone>
-			<roles>
-				<role>Maven packager</role>
-			</roles>
-		</contributor>
-	</contributors>
+
 
 	<profiles>
 	    <profile>

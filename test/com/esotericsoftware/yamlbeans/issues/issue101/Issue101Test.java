@@ -2,6 +2,7 @@ package com.esotericsoftware.yamlbeans.issues.issue101;
 
 import static org.junit.Assert.assertEquals;
 
+import com.esotericsoftware.yamlbeans.UnsafeYamlConfig;
 import org.junit.Test;
 
 import com.esotericsoftware.yamlbeans.YamlException;
@@ -16,14 +17,14 @@ public class Issue101Test {
 		StringBuilder sb = new StringBuilder();
 		sb.append("!com.esotericsoftware.yamlbeans.issues.issue101.Issue101Test$TestObject").append(LINE_SEPARATOR);
 		sb.append("test: test");
-		YamlReader yamlReader = new YamlReader(sb.toString());
+		YamlReader yamlReader = new YamlReader(sb.toString(), new UnsafeYamlConfig());
 		TestObject testObject = (TestObject) yamlReader.read();
 		assertEquals("test", testObject.test);
 
 		sb = new StringBuilder();
 		sb.append("!<!com.esotericsoftware.yamlbeans.issues.issue101.Issue101Test$TestObject>").append(LINE_SEPARATOR);
 		sb.append("test: test");
-		yamlReader = new YamlReader(sb.toString());
+		yamlReader = new YamlReader(sb.toString(), new UnsafeYamlConfig());
 		testObject = (TestObject) yamlReader.read();
 		assertEquals("test", testObject.test);
 	}

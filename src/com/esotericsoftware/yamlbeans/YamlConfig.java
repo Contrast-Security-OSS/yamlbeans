@@ -34,7 +34,7 @@ import com.esotericsoftware.yamlbeans.scalar.ScalarSerializer;
  * @author <a href="mailto:misc@n4te.com">Nathan Sweet</a> */
 public class YamlConfig {
 	/** Configuration for writing YAML. */
-	public final WriteConfig writeConfig = new WriteConfig();
+	public WriteConfig writeConfig = new WriteConfig();
 
 	/** Configuration for reading YAML. */
 	public ReadConfig readConfig = new ReadConfig();
@@ -50,7 +50,7 @@ public class YamlConfig {
 	boolean allowDuplicates = true;
 	String tagSuffix;
 
-	public YamlConfig () {
+	public YamlConfig() {
 		scalarSerializers.put(Date.class, new DateSerializer());
 
 		tagToClass.put("tag:yaml.org,2002:str", String.class);
@@ -137,9 +137,9 @@ public class YamlConfig {
 		boolean writeDefaultValues = false;
 		boolean writeRootTags = true;
 		boolean writeRootElementTags = true;
-		boolean autoAnchor = true;
+		boolean autoAnchor = false;
 		boolean keepBeanPropertyOrder = false;
-		WriteClassName writeClassName = WriteClassName.AUTO;
+		WriteClassName writeClassName = WriteClassName.NEVER;
 		Quote quote = Quote.NONE;
 		Version version;
 		Map<String, String> tags;
@@ -265,9 +265,9 @@ public class YamlConfig {
 		final Map<Class, ConstructorParameters> constructorParameters = new IdentityHashMap();
 		boolean ignoreUnknownProperties;
 		boolean autoMerge = true;
-		boolean classTags = true;
+		boolean classTags = false;
 		boolean guessNumberTypes;
-		boolean anchors = true;
+		boolean anchors = false;
 
 		ReadConfig () {
 		}
@@ -308,7 +308,7 @@ public class YamlConfig {
 
 		/** When false, tags are not used to look up classes. Default is true. */
 		public void setClassTags (boolean classTags) {
-			this.classTags = classTags;
+			if (classTags) throw new IllegalArgumentException("Class Tags cannot be enabled in YamlConfig, use UnsafeYamlConfig instead.");
 		}
 
 		/** When false, the merge key (<<) is not used to merge values into the current map. Default is true. */
@@ -324,7 +324,7 @@ public class YamlConfig {
 
 		/** When false, anchors in the YAML are ignored. Default is true. */
 		public void setAnchors (boolean anchors) {
-			this.anchors = anchors;
+			if (anchors) throw new IllegalArgumentException("Anchors cannot be enabled in YamlConfig, use UnsafeYamlConfig instead.");
 		}
 	}
 

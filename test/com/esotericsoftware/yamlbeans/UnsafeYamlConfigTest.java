@@ -9,13 +9,13 @@ import java.util.Map;
 
 import org.junit.Test;
 
-public class SafeYamlConfigTest {
-	private static final String TESTOBJECT_TAG = "!com.esotericsoftware.yamlbeans.SafeYamlConfigTest$TestObject";
+public class UnsafeYamlConfigTest {
+	private static final String TESTOBJECT_TAG = "!com.esotericsoftware.yamlbeans.UnsafeYamlConfigTest$TestObject";
 	private static final String LINE_SEPARATOR = System.getProperty("line.separator");
 
 	@Test
 	public void testDeserializationOfClassTag () throws YamlException {
-		SafeYamlConfig yamlConfig = new SafeYamlConfig();
+		YamlConfig yamlConfig = new YamlConfig();
 		StringBuilder yamlData = new StringBuilder();
 		yamlData.append(TESTOBJECT_TAG).append(LINE_SEPARATOR).append("a: test").append(LINE_SEPARATOR);
 		YamlReader reader = new YamlReader(yamlData.toString(), yamlConfig);
@@ -28,7 +28,7 @@ public class SafeYamlConfigTest {
 
 	@Test
 	public void testIgnoreAnchor () throws YamlException {
-		SafeYamlConfig yamlConfig = new SafeYamlConfig();
+		YamlConfig yamlConfig = new YamlConfig();
 		StringBuilder yamlData = new StringBuilder();
 		yamlData.append("oldest friend:").append(LINE_SEPARATOR).append("    &1 !contact").append(LINE_SEPARATOR)
 			.append("    name: Bob").append(LINE_SEPARATOR).append("    age: 29").append(LINE_SEPARATOR).append("best friend: *1")

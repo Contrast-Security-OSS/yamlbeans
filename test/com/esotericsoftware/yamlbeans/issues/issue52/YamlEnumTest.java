@@ -1,5 +1,7 @@
 package com.esotericsoftware.yamlbeans.issues.issue52;
 
+import com.esotericsoftware.yamlbeans.UnsafeYamlConfig;
+import com.esotericsoftware.yamlbeans.YamlConfig;
 import com.esotericsoftware.yamlbeans.YamlReader;
 import com.esotericsoftware.yamlbeans.YamlWriter;
 import junit.framework.TestCase;
@@ -37,8 +39,12 @@ public class YamlEnumTest extends TestCase {
 	}
 
 	public static String write(Object object) throws IOException {
+		return write(object,new YamlConfig());
+	}
+
+	public static String write(Object object, YamlConfig config) throws IOException {
 		StringWriter stringWriter = new StringWriter();
-		YamlWriter writer = new YamlWriter(stringWriter);
+		YamlWriter writer = new YamlWriter(stringWriter,config);
 
 		writer.getConfig().setPrivateFields(false);
 		writer.write(object);
@@ -51,7 +57,7 @@ public class YamlEnumTest extends TestCase {
 	}
 
 	public void read(String string) throws IOException {
-		YamlReader reader = new YamlReader(string);
+		YamlReader reader = new YamlReader(string, new UnsafeYamlConfig());
 		reader.read(TestObject.class);
 		reader.close();
 	}
@@ -60,7 +66,7 @@ public class YamlEnumTest extends TestCase {
 		TestObject testObject = new TestObject();
 		testObject.enumArray = new EnumIface[] { new NonEnum("v1", "v2"), new NonEnum("v1", "v2") };
 
-		read(write(testObject));
+		read(write(testObject, new UnsafeYamlConfig()));
 	}
 
 	public void testOnlyEnums() throws IOException {
@@ -74,7 +80,7 @@ public class YamlEnumTest extends TestCase {
 		TestObject testObject = new TestObject();
 		testObject.enumArray = new EnumIface[] { new NonEnum("v1", "v2"), CustomEnum.V2 };
 
-		read(write(testObject));
+		read(write(testObject, new UnsafeYamlConfig()));
 	}
 
 	public void testFixedEnum() throws IOException {

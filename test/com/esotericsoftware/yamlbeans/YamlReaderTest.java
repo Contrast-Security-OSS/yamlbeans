@@ -114,7 +114,7 @@ public class YamlReaderTest extends TestCase {
 	}
 
 	public void testAnchors () throws Exception {
-		Test test = read("child1: &myanchor\n  stringValue: meow\n  intValue: 4321\nintValue: 3\nchild2: *myanchor");
+		Test test = read("child1: &myanchor\n  stringValue: meow\n  intValue: 4321\nintValue: 3\nchild2: *myanchor", new UnsafeYamlConfig());
 		assertEquals(test.intValue, 3);
 		assertTrue(test.child1 == test.child2);
 		assertEquals(test.child2.stringValue, "meow");
@@ -148,7 +148,7 @@ public class YamlReaderTest extends TestCase {
 			"   value: Right Node\n" + //
 			"value: The Root\n";
 
-		YamlReader reader = new YamlReader(yaml);
+		YamlReader reader = new YamlReader(yaml, new UnsafeYamlConfig());
 		reader.getConfig().setClassTag("node", Node.class);
 		Node root = (Node)reader.read();
 		assertEquals("The Root", root.value);
@@ -181,15 +181,19 @@ public class YamlReaderTest extends TestCase {
 	}
 
 	private Test read (String yaml) throws Exception {
+		return read(yaml, new YamlConfig());
+	}
+
+	private Test read (String yaml, YamlConfig config) throws Exception {
 		if (true) {
 			System.out.println(yaml);
 			System.out.println("===");
-			Object obj = new YamlReader(yaml).read(null);
+			Object obj = new YamlReader(yaml,config).read(null);
 			System.out.println(obj);
 			System.out.println();
 			System.out.println();
 		}
-		return new YamlReader(yaml).read(Test.class);
+		return new YamlReader(yaml,config).read(Test.class);
 	}
 
 	static public class Test {
@@ -423,7 +427,7 @@ public class YamlReaderTest extends TestCase {
 				"weight: 24";
 	
 		try {
-			new YamlReader(input).read(Map.class);
+			new YamlReader(input, new UnsafeYamlConfig()).read(Map.class);
 			fail("A type tag with an unknown class fails to parse, even if we ask for it as a simple Map.");
 		} catch (YamlException e) {
 			// Expected behavior.
@@ -456,7 +460,7 @@ public class YamlReaderTest extends TestCase {
 				"    weight: 24";
 	
 		try {
-			new YamlReader(input).read(Lake.class);
+			new YamlReader(input, new UnsafeYamlConfig()).read(Lake.class);
 			fail("A type tag with an unknown class fails to parse, even if we ask for it as a known class.");
 		} catch (YamlException e) {
 			// Expected behavior.
@@ -578,7 +582,7 @@ public class YamlReaderTest extends TestCase {
 		sb.append("---\n").append("key: value").append("\n");
 		sb.append("--- !com.esotericsoftware.yamlbeans.YamlReaderTest$Test\n");
 		sb.append("stringValue: test\n");
-		YamlReader reader = new YamlReader(sb.toString());
+		YamlReader reader = new YamlReader(sb.toString(), new UnsafeYamlConfig());
 		Iterator<Object> iterator = reader.readAll(Object.class);
 		List<Object> list = new ArrayList<Object>();
 		while (iterator.hasNext()) {
@@ -590,7 +594,7 @@ public class YamlReaderTest extends TestCase {
 
 	public void testReadAllCallingNextExpectThrowsRuntimeException() {
 		String yaml = "\ttest";
-		YamlReader reader = new YamlReader(yaml);
+		YamlReader reader = new YamlReader(yaml, new UnsafeYamlConfig());
 		Iterator<Object> iterator = reader.readAll(Object.class);
 		try {
 			iterator.next();
@@ -612,7 +616,7 @@ public class YamlReaderTest extends TestCase {
 
 	public void testGetAnchor() throws YamlException {
 		String yaml = "&1 test\n---\naaa: &2 111\nbbb: &1 222";
-		YamlReader reader = new YamlReader(yaml);
+		YamlReader reader = new YamlReader(yaml, new UnsafeYamlConfig());
 		assertEquals(null, reader.get("1"));
 		reader.read();
 		assertEquals("test", reader.get("1"));
@@ -624,11 +628,11 @@ public class YamlReaderTest extends TestCase {
 
 	public void testGetAnchorsUseGuessNumberTypes() throws YamlException {
 		String yaml = "number: &1 123";
-		YamlReader reader = new YamlReader(yaml);
+		YamlReader reader = new YamlReader(yaml,new UnsafeYamlConfig());
 		reader.read();
 		assertEquals("123", reader.get("1"));
 
-		YamlConfig yamlConfig = new YamlConfig();
+		YamlConfig yamlConfig = new UnsafeYamlConfig();
 		yamlConfig.readConfig.guessNumberTypes = true;
 		reader = new YamlReader(yaml, yamlConfig);
 		reader.read();
@@ -637,7 +641,7 @@ public class YamlReaderTest extends TestCase {
 
 	public void testAnchorAndAlias() throws YamlException {
 		String yaml = "key: &1 value\nkey1: *1\n---\nkey: *1";
-		YamlReader reader = new YamlReader(yaml);
+		YamlReader reader = new YamlReader(yaml, new UnsafeYamlConfig());
 		assertEquals("value", ((Map<String, String>) reader.read()).get("key1"));
 		assertEquals("value", reader.get("1"));
 
@@ -767,7 +771,7 @@ public class YamlReaderTest extends TestCase {
 		StringBuilder sb = new StringBuilder();
 		sb.append("--- !com.esotericsoftware.yamlbeans.YamlReaderTest$Test\n");
 		sb.append("testEnum: d\n");
-		YamlReader reader = new YamlReader(sb.toString());
+		YamlReader reader = new YamlReader(sb.toString(), new UnsafeYamlConfig());
 		try {
 			reader.read();
 			fail("Unable to find enum value");

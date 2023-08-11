@@ -13,6 +13,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.esotericsoftware.yamlbeans.UnsafeYamlConfig;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -107,6 +108,25 @@ public class EmitterTest {
 		map.put("key1", "value1");
 		map.put("key2", "value2");
 		YamlConfig yamlConfig = new YamlConfig();
+		yamlConfig.writeConfig.setFlowStyle(true);
+		yamlConfig.writeConfig.setWriteRootTags(false);
+		yamlConfig.writeConfig.setCanonical(true);
+		YamlWriter yamlWriter = new YamlWriter(stringWriter, yamlConfig);
+		yamlWriter.write(map);
+		yamlWriter.close();
+		assertEquals(
+				"--- " + LINE_SEPARATOR + "{" + LINE_SEPARATOR + "   ? \"key1\"" + LINE_SEPARATOR
+						+ "   : \"value1\"," + LINE_SEPARATOR + "   ? \"key2\""
+						+ LINE_SEPARATOR + "   : \"value2\"" + LINE_SEPARATOR + "}" + LINE_SEPARATOR,
+				stringWriter.toString());
+	}
+
+	@Test
+	public void testStateFlowMapingKeyCanonicalIsTrueWithClassTags() throws EmitterException, IOException {
+		Map<String, String> map = new LinkedHashMap<String, String>();
+		map.put("key1", "value1");
+		map.put("key2", "value2");
+		YamlConfig yamlConfig = new UnsafeYamlConfig();
 		yamlConfig.writeConfig.setFlowStyle(true);
 		yamlConfig.writeConfig.setWriteRootTags(false);
 		yamlConfig.writeConfig.setCanonical(true);

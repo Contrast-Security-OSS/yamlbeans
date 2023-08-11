@@ -20,7 +20,7 @@ public class MergeTest {
 	public void testMerge() throws FileNotFoundException, YamlException {
 		InputStream input = new FileInputStream("test/test-merge.yml");
 		Reader reader = new InputStreamReader(input);
-		Map data = new YamlReader(reader).read(Map.class);
+		Map data = new YamlReader(reader, new UnsafeYamlConfig()).read(Map.class);
 		Map stuff = (Map)data.get("merged");
 		assertEquals("v1", stuff.get("v1"));
 		assertEquals("v2", stuff.get("v2"));
@@ -35,7 +35,7 @@ public class MergeTest {
 		sb.append("test1: &1\n").append("  - key1: value1\n").append("  - key2: value2\n");
 		sb.append("test2:\n").append("  << : *1");
 
-		YamlReader yamlReader = new YamlReader(sb.toString());
+		YamlReader yamlReader = new YamlReader(sb.toString(), new UnsafeYamlConfig());
 		Map<String, Object> map = (Map<String, Object>) yamlReader.read();
 		assertEquals("value1", ((Map<String, String>) map.get("test2")).get("key1"));
 		assertEquals("value2", ((Map<String, String>) map.get("test2")).get("key2"));
@@ -49,7 +49,7 @@ public class MergeTest {
 
 		sb.append("test2:\n").append("  key2: value22\n").append("  << : *1\n").append("  key3: value33\n");
 
-		YamlReader yamlReader = new YamlReader(sb.toString());
+		YamlReader yamlReader = new YamlReader(sb.toString(), new UnsafeYamlConfig());
 		Map<String, Object> map = (Map<String, Object>) yamlReader.read();
 		assertEquals("value1", ((Map<String, String>) map.get("test2")).get("key1"));
 		assertEquals("value22", ((Map<String, String>) map.get("test2")).get("key2"));
@@ -62,7 +62,7 @@ public class MergeTest {
 		sb.append("test1: &1 123\n");
 		sb.append("<< : *1\n");
 
-		YamlReader yamlReader = new YamlReader(sb.toString());
+		YamlReader yamlReader = new YamlReader(sb.toString(), new UnsafeYamlConfig());
 		try {
 			yamlReader.read();
 			fail("Expected a mapping or a sequence of mappings");
