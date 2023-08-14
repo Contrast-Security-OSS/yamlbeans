@@ -60,12 +60,20 @@ public class YamlConfig {
 		tagToClass.put("tag:yaml.org,2002:float", Float.class);
 	}
 
-	/** Allows duplicate keys in YAML document. Default is true. */
+	/**
+	 * Allows duplicate keys in YAML document. Default is true
+	 * @param allowDuplicates allow duplicates.
+	 */
 	public void setAllowDuplicates (boolean allowDuplicates) {
 		this.allowDuplicates = allowDuplicates;
 	}
 
-	/** Allows the specified tag to be used in YAML instead of the full class name. */
+
+	/**
+	 * Allows the specified tag to be used in YAML instead of the full class name.
+	 * @param tag the tag to be used instead of the class.
+	 * @param type the class the tag will link to.
+	 */
 	public void setClassTag (String tag, Class type) {
 		if (tag == null) throw new IllegalArgumentException("tag cannot be null.");
 		if (type == null) throw new IllegalArgumentException("type cannot be null.");
@@ -74,15 +82,26 @@ public class YamlConfig {
 		tagToClass.put(tag, type);
 	}
 
-	/** Adds a serializer for the specified scalar type. */
+
+	/**
+	 * Adds a serializer for the specified scalar type
+	 * @param type the class type the serializer will be linked to.
+	 * @param serializer the serializer.
+	 */
 	public void setScalarSerializer (Class type, ScalarSerializer serializer) {
 		if (type == null) throw new IllegalArgumentException("type cannot be null.");
 		if (serializer == null) throw new IllegalArgumentException("serializer cannot be null.");
 		scalarSerializers.put(type, serializer);
 	}
 
-	/** Sets the default type of elements in a Collection or Map property. No tag will be output for elements of this type. This
-	 * type will be used for each element if no tag is found. */
+
+	/**
+	 * Sets the default type of elements in a Collection or Map property. No tag will be output for elements of this type.
+	 * This type will be used for each element if no tag is found.
+	 * @param type default class.
+	 * @param propertyName name of property.
+	 * @param elementType element type.
+	 */
 	public void setPropertyElementType (Class type, String propertyName, Class elementType) {
 		if (type == null) throw new IllegalArgumentException("type cannot be null.");
 		if (propertyName == null) throw new IllegalArgumentException("propertyName cannot be null.");
@@ -97,8 +116,14 @@ public class YamlConfig {
 		propertyToElementType.put(property, elementType);
 	}
 
-	/** Sets the default type of a property. No tag will be output for values of this type. This type will be used if no tag is
-	 * found. */
+
+	/**
+	 * Sets the default type of a property. No tag will be output for values of this type. This type will be used if no tag is
+	 * found.
+	 * @param type class type
+	 * @param propertyName  name of property
+	 * @param defaultType default class type.
+	 */
 	public void setPropertyDefaultType (Class type, String propertyName, Class defaultType) {
 		if (type == null) throw new IllegalArgumentException("type cannot be null.");
 		if (propertyName == null) throw new IllegalArgumentException("propertyName cannot be null.");
@@ -109,24 +134,39 @@ public class YamlConfig {
 		propertyToDefaultType.put(property, defaultType);
 	}
 
-	/** If true, bean properties with both a getter and setter will be used. Note the getter and setter methods must be named the
-	 * same as the field they get or set. Default is true. */
+	/**  */
+	/**
+	 * If true, bean properties with both a getter and setter will be used. Note the getter and setter methods must be named the
+	 * same as the field they get or set. Default is true.
+	 * @param beanProperties bean properties.
+	 */
 	public void setBeanProperties (boolean beanProperties) {
 		this.beanProperties = beanProperties;
 	}
 
-	/** If true, private non-transient fields will be used. Default is false. */
+	/**
+	 * If true, private non-transient fields will be used. Default is false.
+	 * @param privateFields enable private fields.
+	 */
 	public void setPrivateFields (boolean privateFields) {
 		this.privateFields = privateFields;
 	}
 
-	/** If true, private no-arg constructors will be used. Default is true. */
+
+	/**
+	 * If true, private no-arg constructors will be used. Default is true.
+	 * @param privateConstructors enable private constructors.
+	 */
 	public void setPrivateConstructors (boolean privateConstructors) {
 		this.privateConstructors = privateConstructors;
 	}
 
-	/** When not null, YAML read into a {@link Map} stores any value tags using key + tagSuffix, and when writing YAML the value
-	 * tags are output. Key tags are not stored in the map. Default is null. */
+
+	/**
+	 * When not null, YAML read into a {@link Map} stores any value tags using key + tagSuffix, and when writing YAML the value
+	 * tags are output. Key tags are not stored in the map. Default is null.
+	 * @param tagSuffix tag suffix
+	 */
 	public void setTagSuffix (String tagSuffix) {
 		this.tagSuffix = tagSuffix;
 	}
@@ -272,19 +312,33 @@ public class YamlConfig {
 		ReadConfig () {
 		}
 
-		/** Sets the default YAML version to expect if a YAML document does not explicitly specify a version. Default is 1.1. */
+
+		/**
+		 * Sets the default YAML version to expect if a YAML document does not explicitly specify a version. Default is 1.1.
+		 * @param defaultVersion the default version to set.
+		 */
 		public void setDefaultVersion (Version defaultVersion) {
 			if (defaultVersion == null) throw new IllegalArgumentException("defaultVersion cannot be null.");
 			this.defaultVersion = defaultVersion;
 		}
 
-		/** Sets the class loader to use to find classes read from the YAML. */
+
+		/**
+		 * Sets the class loader to use to find classes read from the YAML
+		 * @param classLoader sets the class loader.
+		 */
 		public void setClassLoader (ClassLoader classLoader) {
 			this.classLoader = classLoader;
 		}
 
-		/** Sets the names of the constructor parameters so classes without no-arg constructors can be instantiated. The Java 6+
-		 * annotation java.beans.ConstructorProperties can be used instead of this method. */
+
+		/**
+		 * Sets the names of the constructor parameters so classes without no-arg constructors can be instantiated. The Java 6+
+		 * annotation java.beans.ConstructorProperties can be used instead of this method.
+		 * @param type the class type.
+		 * @param parameterTypes the parameter type.
+		 * @param parameterNames the parameter name.
+		 */
 		public void setConstructorParameters (Class type, Class[] parameterTypes, String[] parameterNames) {
 			if (type == null) throw new IllegalArgumentException("type cannot be null.");
 			if (parameterTypes == null) throw new IllegalArgumentException("parameterTypes cannot be null.");
@@ -300,29 +354,48 @@ public class YamlConfig {
 			constructorParameters.put(type, parameters);
 		}
 
-		/** When true, fields in the YAML that are not found on the class will not throw a {@link YamlException}. Default is
-		 * false. */
+
+		/**
+		 * When true, fields in the YAML that are not found on the class will not throw a {@link YamlException}. Default is
+		 * false.
+		 * @param allowUnknownProperties allow unknown properties
+		 */
 		public void setIgnoreUnknownProperties (boolean allowUnknownProperties) {
 			this.ignoreUnknownProperties = allowUnknownProperties;
 		}
 
-		/** When false, tags are not used to look up classes. Default is true. */
+		/**
+		 * When false, tags are not used to look up classes. Default is true.
+		 * @param classTags enable/disable class tags.
+		 */
 		public void setClassTags (boolean classTags) {
 			if (classTags) throw new IllegalArgumentException("Class Tags cannot be enabled in YamlConfig, use UnsafeYamlConfig instead.");
 		}
 
-		/** When false, the merge key (<<) is not used to merge values into the current map. Default is true. */
+
+		/**
+		 * When false, the merge key (&lt;&lt;) is not used to merge values into the current map. Default is true.
+		 * @param autoMerge enable/disable automerge
+		 */
 		public void setAutoMerge (boolean autoMerge) {
 			this.autoMerge = autoMerge;
 		}
 
-		/** When true, if the type for a scalar value is unknown and it looks like a number, it is read as a double or long. When
-		 * false, if the type for a scalar value is unknown it is always read a string. Default is true. */
+
+		/**
+		 * When true, if the type for a scalar value is unknown and it looks like a number, it is read as a double or long. When
+		 * false, if the type for a scalar value is unknown it is always read a string. Default is true.
+		 * @param guessNumberTypes enable/disable guess number types
+		 */
 		public void setGuessNumberTypes (boolean guessNumberTypes) {
 			this.guessNumberTypes = guessNumberTypes;
 		}
 
-		/** When false, anchors in the YAML are ignored. Default is true. */
+
+		/**
+		 * When false, anchors in the YAML are ignored. Default is true.
+		 * @param anchors enable/disable anchors
+		 */
 		public void setAnchors (boolean anchors) {
 			if (anchors) throw new IllegalArgumentException("Anchors cannot be enabled in YamlConfig, use UnsafeYamlConfig instead.");
 		}
