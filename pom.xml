@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<name>YamlBeans</name>
-	<groupId>com.contrast.yamlbeans</groupId>
+	<groupId>com.contrastsecurity</groupId>
 	<artifactId>yamlbeans</artifactId>
 	<version>1.17-SNAPSHOT</version>
 
