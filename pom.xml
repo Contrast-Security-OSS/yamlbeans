@@ -6,7 +6,7 @@
 	<name>YamlBeans</name>
 	<groupId>com.contrastsecurity</groupId>
 	<artifactId>yamlbeans</artifactId>
-	<version>1.18-SNAPSHOT</version>
+	<version>1.17-SNAPSHOT</version>
 
 	<description>Java object graphs, to and from YAML</description>
 	<url>https://github.com/Contrast-Security-OSS/yamlbeans</url>
@@ -116,6 +116,10 @@
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-deploy-plugin</artifactId>
 					<version>2.8.2</version>
+				</plugin>
+				<plugin>
+					<artifactId>maven-site-plugin</artifactId>
+					<version>3.9.1</version>
 				</plugin>
 				<plugin>
 					<groupId>org.nuiton</groupId>
