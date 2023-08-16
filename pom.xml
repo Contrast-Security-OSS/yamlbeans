@@ -6,7 +6,7 @@
 	<name>YamlBeans</name>
 	<groupId>com.contrastsecurity</groupId>
 	<artifactId>yamlbeans</artifactId>
-	<version>1.18-SNAPSHOT</version>
+	<version>1.17-SNAPSHOT</version>
 
 	<description>Java object graphs, to and from YAML</description>
 	<url>https://github.com/Contrast-Security-OSS/yamlbeans</url>
@@ -27,10 +27,7 @@
 			<id>ossrh</id>
 			<url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
 		</repository>
-		<site>
-			<id>github</id>
-			<url>scm:git:https://github.com/Contrast-Security-OSS/contrast-maven-plugin.git</url>
-		</site>
+		
 	</distributionManagement>
 
 	<scm>
