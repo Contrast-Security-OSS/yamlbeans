@@ -62,4 +62,4 @@ jobs:
           OSSRH_PASSWORD: ${{ secrets.OSSRH_PASSWORD }}
           GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
         run: |
-          ./mvnw -Dmaven.site.skip=true --batch-mode release:prepare release:perform -Dusername=$GITHUB_ACTOR -Dpassword=$GITHUB_TOKEN
+          ./mvnw -Dmaven.site.skip=true --batch-mode release:prepare gpg:sign release:perform -Dusername=$GITHUB_ACTOR -Dpassword=$GITHUB_TOKEN
