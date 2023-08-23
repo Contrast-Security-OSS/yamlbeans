@@ -52,4 +52,4 @@ jobs:
         run: |
           git config --global user.name 'Github'
           git config --global user.email 'github@users.noreply.github.com'
-          ./mvnw -Darguments="-DskipTests=true" --batch-mode release:prepare gpg:sign release:perform -Dusername=$GITHUB_ACTOR -Dpassword=$GITHUB_TOKEN -Prelease
+          ./mvnw -Darguments="-DskipTests=true" --batch-mode clean deploy -Dusername=$GITHUB_ACTOR -Dpassword=$GITHUB_TOKEN -Prelease
