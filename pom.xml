@@ -6,7 +6,7 @@
 	<name>YamlBeans</name>
 	<groupId>com.contrastsecurity</groupId>
 	<artifactId>yamlbeans</artifactId>
-	<version>1.18-SNAPSHOT</version>
+	<version>1.17-SNAPSHOT</version>
 
 	<description>Java object graphs, to and from YAML</description>
 	<url>https://github.com/Contrast-Security-OSS/yamlbeans</url>
@@ -164,7 +164,7 @@
 						<extensions>true</extensions>
 						<configuration>
 							<serverId>ossrh</serverId>
-							<nexusUrl>https://oss.sonatype.org/</nexusUrl>
+							<nexusUrl>https://oss1.sonatype.org/</nexusUrl>
 							<autoReleaseAfterClose>true</autoReleaseAfterClose>
 						</configuration>
 					</plugin>
